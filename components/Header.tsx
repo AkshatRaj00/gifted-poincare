@@ -1,23 +1,26 @@
 // src/components/Header.tsx
-"use client";
+'use client'; // Client Component
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "../components/AuthContext";
-import { signOut } from "firebase/auth";
-import { auth } from "../app/firebase/config";
+import { useAuth } from '../components/AuthContext';
+import { signOut } from 'firebase/auth';
+import { auth } from '../app/firebase/config';
+import LoginModal from './LoginModal'; // LoginModal import karo
+import RegisterModal from './RegisterModal'; // RegisterModal import karo
 
 const Header = () => {
   const { currentUser, loading } = useAuth();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // Login modal state
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Register modal state
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      alert("Logged out successfully!");
+      alert('Logged out successfully!');
     } catch (error: any) {
-      // 'any' type for simplicity in Codespaces
-      console.error("Logout failed:", error);
-      alert("Logout failed: " + error.message);
+      console.error('Logout failed:', error);
+      alert('Logout failed: ' + error.message);
     }
   };
 
@@ -65,13 +68,11 @@ const Header = () => {
             Contact
           </Link>
 
-          {loading ? (
+          {loading ? ( // Loading state
             <span className="text-gray-400 text-sm ml-4">Loading...</span>
-          ) : currentUser ? (
+          ) : currentUser ? ( // Jab user logged in ho
             <div className="flex items-center space-x-4 ml-4">
-              <span className="text-indigo-300 text-base font-medium">
-                {currentUser.email}
-              </span>
+              <span className="text-indigo-300 text-base font-medium">{currentUser.email}</span> {/* User ka email dikhao */}
               <button
                 onClick={handleLogout}
                 className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-full text-sm transition duration-300"
@@ -79,23 +80,21 @@ const Header = () => {
                 Logout
               </button>
             </div>
-          ) : (
-            <Link
-              href="/login"
+          ) : ( // Jab user logged out ho
+            // YAHAN PAR AB LINK KI JAGAH BUTTON HOGA JO MODAL KHOLEGA
+            <button 
+              onClick={() => setIsLoginModalOpen(true)} // Login modal open karega
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-full transition duration-300 transform hover:scale-105 ml-4"
             >
               Login
-            </Link>
+            </button> 
           )}
         </div>
 
         {/* Call to Action Button - for larger screens */}
-        <div className="hidden md:block">
-          {!loading && !currentUser && (
-            <Link
-              href="/contact"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-full transition duration-300 transform hover:scale-105"
-            >
+        <div className="hidden md:block"> 
+          {!loading && !currentUser && ( // Jab user logged out ho
+            <Link href="/contact" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-full transition duration-300 transform hover:scale-105">
               Get a Quote
             </Link>
           )}
@@ -106,6 +105,18 @@ const Header = () => {
           <button className="text-white text-2xl">☰</button>
         </div>
       </nav>
+
+      {/* Login and Register Modals - HEADER COMPONENT MEIN RENDER KAR RAHE HAIN */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onRegisterClick={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }}
+      />
+      <RegisterModal 
+        isOpen={isRegisterModalOpen} 
+        onClose={() => setIsRegisterModalOpen(false)} 
+        onLoginClick={() => { setIsRegisterModalOpen(false); setIsLoginModalOpen(true); }}
+      />
     </header>
   );
 };
