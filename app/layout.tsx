@@ -20,15 +20,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* Body ko flex container bana rahe hain taki footer neeche rahe */}
       <body className={`${inter.className} flex flex-col min-h-screen`}>
-        <Header /> {/* Header component yahan add kiya hai */}
-        <main className="flex-grow">
-          <AuthProvider> {/* Yahan AuthProvider se wrap kiya hai */}
+        <AuthProvider> {/* AuthProvider ko poori body ke content ko wrap karna hai */}
+          <Header /> {/* Header component ab AuthProvider ke andar hai */}
+          <main className="flex-grow">
             {children}
-          </AuthProvider>
-        </main>
-        <Footer /> {/* Footer component yahan add kiya hai */}
+          </main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

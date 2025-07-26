@@ -4,30 +4,33 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { auth } from '../app/firebase/config'; // Firebase auth service import karo
+import { auth } from '../app/firebase/config';
 import Link from 'next/link';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRegisterClick: () => void; // Register button click ke liye
+  onRegisterClick: () => void;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegisterClick }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter(); // Initialize router for navigation
+  const router = useRouter();
 
-  // Email/Password Login
+  // ***** YAHAN DHYAN DO *****
+  // Agar modal open nahi hai toh kuch render mat karo
+  if (!isOpen) return null; // <-- YE LINE BAHUT ZAROORI HAI
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
+    setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      onClose(); // Login successful hone par modal band kar do
-      alert('Login Successful!'); // Ya koi success message dikhao
-    } catch (err: unknown) { // 'unknown' type used for error handling
+      onClose();
+      alert('Login Successful!');
+    } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -36,15 +39,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegisterClic
     }
   };
 
-  // Google Login
   const handleGoogleLogin = async () => {
-    setError(null); // Clear previous errors
+    setError(null);
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      onClose(); // Login successful hone par modal band kar do
-      alert('Login Successful with Google!'); // Ya koi success message dikhao
-    } catch (err: unknown) { // 'unknown' type used for error handling
+      onClose();
+      alert('Login Successful with Google!');
+    } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -60,13 +62,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegisterClic
           onClick={onClose} 
           className="absolute top-4 right-4 text-white text-2xl hover:text-indigo-300"
         >
-          &times; {/* Close button */}
+          &times;
         </button>
         <h2 className="text-3xl font-extrabold text-center mb-6 text-indigo-300">Login</h2>
         
         {error && <p className="text-red-400 text-center mb-4">{error}</p>}
 
-        {/* Email/Password Form */}
         <form onSubmit={handleEmailLogin} className="space-y-4 mb-6">
           <div>
             <label htmlFor="login-email" className="block text-sm font-medium mb-1">Email:</label>
@@ -100,7 +101,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegisterClic
 
         <div className="text-center text-sm opacity-80 mb-6">- OR -</div>
 
-        {/* Google Login Button */}
         <button
           onClick={handleGoogleLogin}
           className="w-full flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 transform hover:scale-105"
@@ -111,9 +111,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onRegisterClic
 
                 <p className="text-center mt-6 text-sm">
                   Don&apos;t have an account?{' '}
-                  <Link href="/register" className="text-indigo-300 hover:underline">
+                  <span onClick={onRegisterClick} className="text-indigo-300 hover:underline cursor-pointer">
                     Register here.
-                  </Link>
+                  </span>
                 </p>
               </div>
             </div>
