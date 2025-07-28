@@ -16,9 +16,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onLoginC
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  // ***** YAHAN BHI DHYAN DO *****
-  // Agar modal open nahi hai toh kuch render mat karo
-  if (!isOpen) return null; // <-- YE LINE BAHUT ZAROORI HAI
+  if (!isOpen) return null;
 
   const handleEmailRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +25,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onLoginC
       await createUserWithEmailAndPassword(auth, email, password);
       onClose(); // Registration successful hone par modal band kar do
       alert('Registration Successful! Please login.'); // Ya koi success message dikhao
-    } catch (err: any) { // 'any' type use kiya hai (CodeSandbox strictness ke liye)
+    } catch (err: any) { // 'any' type use kiya hai (Codespaces strictness ke liye)
       setError(err.message);
     }
   };

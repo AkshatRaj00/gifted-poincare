@@ -8,7 +8,7 @@ import { AuthProvider } from '../components/AuthContext'; // AuthProvider import
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'OnePersonAI',
   description: 'Your Mind\'s Mirror. Authentic AI.',
 };

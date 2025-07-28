@@ -1,7 +1,8 @@
+
 // src/components/Header.tsx
 'use client'; // Client Component
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useAuth } from '../components/AuthContext';
 import { signOut } from 'firebase/auth';
@@ -18,9 +19,14 @@ const Header = () => {
     try {
       await signOut(auth);
       alert('Logged out successfully!');
-    } catch (error: any) {
-      console.error('Logout failed:', error);
-      alert('Logout failed: ' + error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Logout failed:', error);
+        alert('Logout failed: ' + error.message);
+      } else {
+        console.error('Logout failed: Unknown error');
+        alert('Logout failed: Unknown error occurred');
+      }
     }
   };
 
@@ -120,6 +126,5 @@ const Header = () => {
     </header>
   );
 };
-
 
 export default Header;

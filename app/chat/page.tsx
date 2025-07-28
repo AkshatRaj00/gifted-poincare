@@ -118,7 +118,6 @@ export default function ChatPage() {
     if (!directMessage) setInput('');
     setIsLoading(true);
     setIsTyping(true);
-
     // Add typing indicator
     const typingMessage: Message = {
       id: Date.now() + 1,
